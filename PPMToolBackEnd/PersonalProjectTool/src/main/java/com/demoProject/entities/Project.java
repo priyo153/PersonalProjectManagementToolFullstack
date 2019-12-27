@@ -44,11 +44,9 @@ public class Project {
 	private Date endDate;
 	
 	@Column(name="createdat")
-	@NotNull(message="Creation date is empty")
 	private Date createdAt;
 	
 	@Column(name="updatedat")
-	@NotNull(message="updation date is empty")
 	private Date updatedAt;
 	
 	public Project() {}
