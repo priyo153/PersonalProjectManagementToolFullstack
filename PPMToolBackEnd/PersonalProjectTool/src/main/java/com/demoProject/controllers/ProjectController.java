@@ -1,9 +1,7 @@
 package com.demoProject.controllers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +28,7 @@ import com.demoProject.services.ProjectService;
 
 @RestController
 @RequestMapping("/projects")
+@CrossOrigin
 public class ProjectController {
 
 	@Autowired
@@ -49,37 +50,34 @@ public class ProjectController {
 
 	@PostMapping("")
 	public Project save(@Valid @RequestBody Project project, BindingResult result) throws Exception {
-		
+		System.out.println(project);
+		if (result.hasErrors()) {
+
+			throw new RequestHasErrorsException(result.getFieldErrors());
+
+		}
+
 		project.setId(0);
 		project.setCreatedAt(getDate());
 		project.setUpdatedAt(getDate());
-		
-		if (result.hasErrors())
-			throw new RequestHasErrorsException();
 
-
-
-		
 		Project p = projectService.save(project);
-		
-		
 		return p;
 
 	}
 
 	@PutMapping("")
 	public Project updateProject(@Valid @RequestBody Project project, BindingResult result) throws Exception {
-		
+
 		project.setCreatedAt(projectService.findByIdentifier(project.getProjectIdentifier()).getCreatedAt());
 		project.setUpdatedAt(getDate());
 		if (result.hasErrors())
-			throw new RequestHasErrorsException();
+			throw new RequestHasErrorsException(result.getFieldErrors());
 
 		try {
 			int id = projectService.findByIdentifier(project.getProjectIdentifier()).getId();
 			project.setId(id);
-	
-			
+
 		} catch (Exception e) {
 			throw new ProjectNotFoundException();
 		}
@@ -94,10 +92,9 @@ public class ProjectController {
 		projectService.deleteByIdentifier(identifier);
 		return new ResponseEntity<>("project deleted sucessfully", HttpStatus.OK);
 	}
-	
-	public Date getDate() throws Exception {
-		   return Date.valueOf(LocalDateTime.now().toLocalDate().toString());  
 
+	public Date getDate() throws Exception {
+		return Date.valueOf(LocalDateTime.now().toLocalDate().toString());
 
 	}
 

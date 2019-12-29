@@ -1,5 +1,6 @@
 package com.demoProject.services;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class ProjectService {
 	
 	public List<Project> findAllProjects() {
 		List<Project> p=projectRepository.findAll();
+		p.sort(Comparator.comparing(Project::getId).reversed());
 		return p;
 	}
 	

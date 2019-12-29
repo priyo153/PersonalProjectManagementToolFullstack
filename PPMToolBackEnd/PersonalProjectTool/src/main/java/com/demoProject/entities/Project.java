@@ -7,50 +7,53 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 
 @Entity
 public class Project {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@JsonIgnore
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name="projectname")
+
+	@Column(name = "projectname")
+	@NotEmpty(message = "Project Name is empty")
 	private String projectName;
-	
-	@Column(name="projectidentifier")
-	@Length(min=5,max=6, message="Project identifier needs to be between 5 and 6 characters")
-	@NotNull(message="Project identifier is empty")
+
+	@Column(name = "projectidentifier")
+	@Length(min = 5, max = 6, message = "Project identifier needs to be between 5 and 6 characters")
 	private String projectIdentifier;
-	
-	@Column(name="description")
-	@NotNull(message="description is empty")
+
+	@Column(name = "description")
+	@NotEmpty(message = "description is empty")
 	private String description;
-	
-	@Column(name="startdate")
-	@NotNull(message="Start date is empty")
+
+	@Column(name = "startdate")
+	@NotNull(message = "Start date is empty")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date startDate;
-	
-	@Column(name="enddate")
-	@NotNull(message="End date is empty")
+
+	@Column(name = "enddate")
+	@NotNull(message = "End date is empty")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date endDate;
-	
-	@Column(name="createdat")
+
+	@Column(name = "createdat")
 	private Date createdAt;
-	
-	@Column(name="updatedat")
+
+	@Column(name = "updatedat")
 	private Date updatedAt;
-	
-	public Project() {}
-	
+
+	public Project() {
+	}
+
 	public Project(String projectName, String projectIdentifier, String description, Date startDate, Date endDate,
 			Date createdAt, Date updatedAt) {
 		super();
@@ -62,7 +65,6 @@ public class Project {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-
 
 	public int getId() {
 		return id;
@@ -128,19 +130,11 @@ public class Project {
 		this.updatedAt = updatedAt;
 	}
 
-
-
 	@Override
 	public String toString() {
 		return "Project [projectName=" + projectName + ", projectIdentifier=" + projectIdentifier + ", description="
 				+ description + ", startDate=" + startDate + ", endDate=" + endDate + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + "]";
 	}
-	
-	
-	
-	
-	
-	
 
 }
