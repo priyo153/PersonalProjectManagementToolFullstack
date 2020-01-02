@@ -37,7 +37,7 @@ public class ProjectController {
 	@GetMapping("/{identifier}")
 	public Project findByProjectIdnetifier(@Valid @PathVariable String identifier) {
 		
-		System.out.println(identifier+"hi");
+		
 		Project p = projectService.findByIdentifier(identifier);
 		return p;
 
