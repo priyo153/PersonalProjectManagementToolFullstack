@@ -8,8 +8,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.demoProject.entities.Backlog;
 import com.demoProject.entities.Project;
 import com.demoProject.exceptions.ProjectNotFoundException;
+import com.demoProject.repositories.BacklogRepository;
 import com.demoProject.repositories.ProjectRepository;
 
 @Service
@@ -17,6 +19,8 @@ public class ProjectService {
 	
 	@Autowired
 	ProjectRepository projectRepository;
+	@Autowired
+	BacklogRepository backlogRepository;
 	
 	public Project findByIdentifier(String identifier) {
 		
@@ -37,6 +41,18 @@ public class ProjectService {
 	}
 	
 	public Project save(Project project) {
+		String projectIdentifier = project.getProjectIdentifier().toUpperCase();
+		
+		project.setProjectIdentifier(projectIdentifier);
+		if(project.getId()==0) {
+			Backlog backlog=new Backlog();
+			project.setBacklog(backlog);
+			backlog.setProject(project);
+			backlog.setProjectIdentifier(projectIdentifier);
+		}
+		else {
+			project.setBacklog(backlogRepository.findByProjectIdentifier(projectIdentifier));
+		}
 		Project p=projectRepository.save(project);
 		return p;
 	}

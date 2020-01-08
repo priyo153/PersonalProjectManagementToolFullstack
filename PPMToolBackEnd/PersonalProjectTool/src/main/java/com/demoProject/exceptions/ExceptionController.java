@@ -30,6 +30,15 @@ public class ExceptionController {
 		e.setErrorCode(404);
 		return new ResponseEntity<>(e, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler
+	public ResponseEntity<ExceptionObject> projectTaskNotFound(TaskNotFoundException p) {
+
+		ExceptionObject e = new ExceptionObject();
+		e.setMessage(p.getMessage());
+		e.setErrorCode(404);
+		return new ResponseEntity<>(e, HttpStatus.NOT_FOUND);
+	}
 
 	@ExceptionHandler
 	public ResponseEntity<Map<String, String>> requestHasErrors(RequestHasErrorsException e) {
@@ -39,7 +48,7 @@ public class ExceptionController {
 		for (FieldError f : fieldErrrorList) {
 			errors.put(f.getField(), f.getDefaultMessage());
 		}
-		return new ResponseEntity<Map<String, String>>(errors, HttpStatus.FORBIDDEN);
+		return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler
@@ -49,7 +58,7 @@ public class ExceptionController {
 		e.printStackTrace();
 		obj.setMessage("Something went wrong!");
 		obj.setErrorCode(400);
-		return new ResponseEntity<>(obj, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

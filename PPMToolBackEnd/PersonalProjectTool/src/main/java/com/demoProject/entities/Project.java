@@ -2,11 +2,15 @@ package com.demoProject.entities;
 
 import java.sql.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +20,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
+@Table(name="project")
 public class Project {
 
 	@Id
@@ -50,6 +56,14 @@ public class Project {
 
 	@Column(name = "updatedat")
 	private Date updatedAt;
+	
+	@OneToOne(
+			fetch=FetchType.EAGER,
+			cascade=CascadeType.ALL,
+			mappedBy="project"
+			)
+	@JsonIgnore
+	private Backlog backlog;
 
 	public Project() {
 	}
@@ -64,6 +78,17 @@ public class Project {
 		this.endDate = endDate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+	
+	
+	
+
+	public Backlog getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(Backlog backlog) {
+		this.backlog = backlog;
 	}
 
 	public int getId() {
