@@ -36,8 +36,8 @@ public class BacklogController {
 	private ProjectService projectService;
 
 	@PostMapping("/{backlogId}")
-	public ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
-			@PathVariable String backlogId) throws Exception {
+	public ResponseEntity<?> addProjectTaskToBacklog(@PathVariable String backlogId, @Valid @RequestBody ProjectTask projectTask, BindingResult result
+			) throws Exception {
 
 		projectService.findByIdentifier(backlogId);
 
@@ -45,8 +45,8 @@ public class BacklogController {
 			throw new RequestHasErrorsException(result.getFieldErrors());
 		}
 
+		System.out.println(result+"hi");
 		ProjectTask projectTask1 = projectTaskService.addProjectTask(backlogId, projectTask);
-
 		return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
 
 	}
@@ -54,6 +54,7 @@ public class BacklogController {
 	@PutMapping("/{backlogId}/{sequenceId}")
 	public ProjectTask updateProjectTask(@Valid @RequestBody ProjectTask projectTask,
 			BindingResult result, @PathVariable String backlogId, @PathVariable String sequenceId) throws Exception {
+		
 
 		ProjectTask p = getProjectTask(backlogId, sequenceId);
 
@@ -80,6 +81,7 @@ public class BacklogController {
 
 	@GetMapping("/{backlogId}/{sequenceId}")
 	public ProjectTask getProjectTask(@PathVariable String backlogId, @PathVariable String sequenceId) {
+		
 
 		projectService.findByIdentifier(backlogId);
 		ProjectTask p = projectTaskService.findProjectTask(sequenceId);
