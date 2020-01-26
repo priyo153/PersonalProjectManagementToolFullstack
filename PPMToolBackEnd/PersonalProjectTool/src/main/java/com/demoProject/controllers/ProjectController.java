@@ -1,5 +1,6 @@
 package com.demoProject.controllers;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,22 +35,22 @@ public class ProjectController {
 	ProjectService projectService;
 
 	@GetMapping("/{identifier}")
-	public Project findByProjectIdnetifier(@Valid @PathVariable String identifier) {
-		
-		
-		Project p = projectService.findByIdentifier(identifier);
+	public Project findByProjectIdnetifier(@Valid @PathVariable String identifier, Principal principal) {
+
+		Project p = projectService.findByIdentifier(identifier, principal.getName());
 		return p;
 
 	}
 
 	@GetMapping("")
-	public List<Project> findAllProjects() {
-		List<Project> p = projectService.findAllProjects();
+	public List<Project> findAllProjects(Principal principal) {
+		List<Project> p = projectService.findAllProjects(principal.getName());
 		return p;
 	}
 
 	@PostMapping("")
-	public Project save(@Valid @RequestBody Project project, BindingResult result) throws Exception {
+	public Project save(@Valid @RequestBody Project project, BindingResult result, Principal principal)
+			throws Exception {
 		System.out.println(project);
 		if (result.hasErrors()) {
 
@@ -61,35 +62,41 @@ public class ProjectController {
 		project.setCreatedAt(getDate());
 		project.setUpdatedAt(getDate());
 
-		Project p = projectService.save(project);
+		Project p = projectService.save(project, principal.getName());
 		return p;
 
 	}
 
 	@PutMapping("")
-	public Project updateProject(@Valid @RequestBody Project project, BindingResult result) throws Exception {
+	public Project updateProject(@Valid @RequestBody Project project, BindingResult result, Principal principal)
+			throws Exception {
 
-		project.setCreatedAt(projectService.findByIdentifier(project.getProjectIdentifier()).getCreatedAt());
+		Project oldProject = projectService.findByIdentifier(project.getProjectIdentifier(), principal.getName());
+		project.setCreatedAt(oldProject.getCreatedAt());
 		project.setUpdatedAt(getDate());
+		project.setUser(oldProject.getUser());
+		project.setUsername(principal.getName());
+
 		if (result.hasErrors())
 			throw new RequestHasErrorsException(result.getFieldErrors());
 
 		try {
-			int id = projectService.findByIdentifier(project.getProjectIdentifier()).getId();
+			int id = oldProject.getId();
 			project.setId(id);
 
 		} catch (Exception e) {
 			throw new ProjectNotFoundException();
 		}
-		Project p = projectService.save(project);
+		Project p = projectService.save(project, principal.getName());
 		return p;
 
 	}
 
 	@DeleteMapping("/{identifier}")
-	public ResponseEntity<String> deleteByProjectIdnetifier(@Valid @PathVariable String identifier) {
+	public ResponseEntity<String> deleteByProjectIdnetifier(@Valid @PathVariable String identifier,
+			Principal principal) {
 
-		projectService.deleteByIdentifier(identifier);
+		projectService.deleteByIdentifier(identifier, principal.getName());
 		return new ResponseEntity<>("project deleted sucessfully", HttpStatus.OK);
 	}
 

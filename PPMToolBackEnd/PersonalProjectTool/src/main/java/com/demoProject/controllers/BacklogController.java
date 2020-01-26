@@ -1,5 +1,6 @@
 package com.demoProject.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -36,27 +37,26 @@ public class BacklogController {
 	private ProjectService projectService;
 
 	@PostMapping("/{backlogId}")
-	public ResponseEntity<?> addProjectTaskToBacklog(@PathVariable String backlogId, @Valid @RequestBody ProjectTask projectTask, BindingResult result
-			) throws Exception {
+	public ResponseEntity<?> addProjectTaskToBacklog(@PathVariable String backlogId,
+			@Valid @RequestBody ProjectTask projectTask, BindingResult result, Principal principal) throws Exception {
 
-		projectService.findByIdentifier(backlogId);
+		projectService.findByIdentifier(backlogId, principal.getName());
+		projectTask.setId(null);
 
 		if (result.hasErrors()) {
 			throw new RequestHasErrorsException(result.getFieldErrors());
 		}
 
-		System.out.println(result+"hi");
 		ProjectTask projectTask1 = projectTaskService.addProjectTask(backlogId, projectTask);
 		return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
 
 	}
 
 	@PutMapping("/{backlogId}/{sequenceId}")
-	public ProjectTask updateProjectTask(@Valid @RequestBody ProjectTask projectTask,
-			BindingResult result, @PathVariable String backlogId, @PathVariable String sequenceId) throws Exception {
-		
+	public ProjectTask updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
+			@PathVariable String backlogId, @PathVariable String sequenceId, Principal principal) throws Exception {
 
-		ProjectTask p = getProjectTask(backlogId, sequenceId);
+		ProjectTask p = getProjectTask(backlogId, sequenceId, principal);
 
 		projectTask.setId(p.getId());
 		projectTask.setProjectSequence(p.getProjectSequence());
@@ -73,17 +73,17 @@ public class BacklogController {
 	}
 
 	@GetMapping("/{backlogId}")
-	public List<ProjectTask> getProjectTasks(@PathVariable String backlogId) {
-		projectService.findByIdentifier(backlogId);
+	public List<ProjectTask> getProjectTasks(@PathVariable String backlogId, Principal principal) {
+		projectService.findByIdentifier(backlogId, principal.getName());
 		return projectTaskService.findBacklogById(backlogId);
 
 	}
 
 	@GetMapping("/{backlogId}/{sequenceId}")
-	public ProjectTask getProjectTask(@PathVariable String backlogId, @PathVariable String sequenceId) {
-		
+	public ProjectTask getProjectTask(@PathVariable String backlogId, @PathVariable String sequenceId,
+			Principal principal) {
 
-		projectService.findByIdentifier(backlogId);
+		projectService.findByIdentifier(backlogId, principal.getName());
 		ProjectTask p = projectTaskService.findProjectTask(sequenceId);
 
 		if (!p.getProjectIdentifier().equals(backlogId)) {
@@ -92,19 +92,16 @@ public class BacklogController {
 		return p;
 
 	}
-	
-	
+
 	@DeleteMapping("/{backlogId}/{sequenceId}")
-	public ResponseEntity<String> deleteProjectTask(@PathVariable String backlogId, @PathVariable String sequenceId){
-		
-		ProjectTask p = getProjectTask(backlogId, sequenceId);
-	
+	public ResponseEntity<String> deleteProjectTask(@PathVariable String backlogId, @PathVariable String sequenceId,
+			Principal principal) {
+
+		ProjectTask p = getProjectTask(backlogId, sequenceId, principal);
+
 		projectTaskService.deleteProjectTask(p);
-		return new ResponseEntity<>("Project task successfully deleted",HttpStatus.OK);
-		
+		return new ResponseEntity<>("Project task successfully deleted", HttpStatus.OK);
+
 	}
-	
-	
-	
 
 }

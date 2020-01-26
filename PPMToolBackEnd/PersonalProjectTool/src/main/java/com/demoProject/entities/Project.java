@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -20,9 +22,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 @Entity
-@Table(name="project")
+@Table(name = "project")
 public class Project {
 
 	@Id
@@ -43,12 +44,12 @@ public class Project {
 
 	@Column(name = "startdate")
 	@NotNull(message = "Start date is empty")
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date startDate;
 
 	@Column(name = "enddate")
 	@NotNull(message = "End date is empty")
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endDate;
 
 	@Column(name = "createdat")
@@ -56,32 +57,38 @@ public class Project {
 
 	@Column(name = "updatedat")
 	private Date updatedAt;
-	
-	@OneToOne(
-			fetch=FetchType.EAGER,
-			cascade=CascadeType.ALL,
-			mappedBy="project"
-			)
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
 	@JsonIgnore
 	private Backlog backlog;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+			CascadeType.REFRESH })
+	@JoinColumn(name = "user_id")
+	@JsonIgnore
+	private User user;
+
+	@Column(name = "username")
+	private String username;
 
 	public Project() {
 	}
 
-	public Project(String projectName, String projectIdentifier, String description, Date startDate, Date endDate,
-			Date createdAt, Date updatedAt) {
-		super();
-		this.projectName = projectName;
-		this.projectIdentifier = projectIdentifier;
-		this.description = description;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+	public String getUsername() {
+		return username;
 	}
-	
-	
-	
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Backlog getBacklog() {
 		return backlog;
@@ -157,9 +164,9 @@ public class Project {
 
 	@Override
 	public String toString() {
-		return "Project [projectName=" + projectName + ", projectIdentifier=" + projectIdentifier + ", description="
-				+ description + ", startDate=" + startDate + ", endDate=" + endDate + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + "]";
+		return "Project [id=" + id + ", projectName=" + projectName + ", projectIdentifier=" + projectIdentifier
+				+ ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", backlog=" + backlog + ", username=" + username + "]";
 	}
 
 }
