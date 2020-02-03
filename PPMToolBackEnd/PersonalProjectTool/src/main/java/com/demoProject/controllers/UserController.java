@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demoProject.entities.User;
+import com.demoProject.exceptions.InvalidLoginResponse;
 import com.demoProject.exceptions.RequestHasErrorsException;
 import com.demoProject.exceptions.UserNotFoundException;
 import com.demoProject.payload.JWTLoginSuccessResponse;
@@ -61,7 +62,7 @@ public class UserController {
 
 		catch (Exception e) {
 			e.printStackTrace();
-			throw new UserNotFoundException();
+			return new ResponseEntity<>(new InvalidLoginResponse(), HttpStatus.CONFLICT);
 		}
 
 	}

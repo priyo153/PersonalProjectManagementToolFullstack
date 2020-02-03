@@ -50,6 +50,7 @@ public class User implements UserDetails {
 	private String confirm;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
 	private List<Project> projects;
 
 	public User() {

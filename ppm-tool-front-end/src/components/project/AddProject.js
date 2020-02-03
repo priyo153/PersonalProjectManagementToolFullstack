@@ -3,6 +3,7 @@ import propTypes from "prop-types";
 import { connect } from "react-redux";
 import { createProject } from "../../actions/projectActions";
 import classnames from "classnames";
+import componentIsRendered from "../../securityUtils/componentIsRendered";
 
 class AddProject extends Component {
   constructor() {
@@ -45,6 +46,7 @@ class AddProject extends Component {
   }
   render() {
     const { errors } = this.state;
+    componentIsRendered();
 
     return (
       <div>

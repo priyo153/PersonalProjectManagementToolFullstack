@@ -1,5 +1,24 @@
 img {
-  width: 100%;
+  max-width: 100%;
+}
+
+.notFoundPic {
+  max-width: 40%;
+  content: url(https://images.unsplash.com/photo-1495249346844-83e18c90a511?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1934&q=80);
+
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  transition: 500ms;
+}
+.notFoundPic:hover {
+  max-width: 41%;
+  content: url(https://images.unsplash.com/photo-1495249346844-83e18c90a511?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1934&q=80);
+
+  box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.9);
+}
+
+.errormsg {
+  font-family: "Dancing Script", cursive;
+  color: red;
 }
 
 .navbar {
@@ -30,7 +49,7 @@ img {
 
 .landing {
   position: relative;
-  /* background: url("../img/showcase.jpg") no-repeat; */
+  /*background: url("../img/showcase.jpg") no-repeat;*/
   background-size: cover;
   background-position: center;
   height: 100vh;

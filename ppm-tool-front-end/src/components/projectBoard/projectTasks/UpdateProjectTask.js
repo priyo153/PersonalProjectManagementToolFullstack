@@ -7,6 +7,7 @@ import {
   updateProjectTask
 } from "../../../actions/backlogActions";
 import PropTypes from "prop-types";
+import componentIsRendered from "../../../securityUtils/componentIsRendered";
 
 class UpdateProjectTask extends Component {
   constructor() {
@@ -86,6 +87,7 @@ class UpdateProjectTask extends Component {
     );
   }
   render() {
+    componentIsRendered();
     const { errors } = this.state;
     return (
       <div className="add-PBI">

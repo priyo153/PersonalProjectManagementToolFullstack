@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import componentIsRendered from "../../securityUtils/componentIsRendered";
 
 class Landing extends Component {
   render() {
+    componentIsRendered();
+
     return (
       <div className="landing">
         <div className="light-overlay landing-inner text-dark">

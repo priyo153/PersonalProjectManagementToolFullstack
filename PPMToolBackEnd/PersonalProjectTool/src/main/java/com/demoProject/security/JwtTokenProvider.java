@@ -28,7 +28,7 @@ public class JwtTokenProvider {
 		
 		Date now=new Date(System.currentTimeMillis());
 		Date expiryDate=new Date(now.getTime()+EXPIRATION_TIME);
-		
+		System.out.println(expiryDate);
 		String userId=Long.toString(user.getId());
 		
 		

@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import projectReducer from "../../../reducers/projectReducer";
 import { Link } from "react-router-dom";
 import { deleteProjectTask } from "../../../actions/backlogActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import componentIsRendered from "../../../securityUtils/componentIsRendered";
 
 class ProjectTask extends Component {
   onDeleteClick(project_id, task_id) {
     this.props.deleteProjectTask(project_id, task_id);
   }
   render() {
+    componentIsRendered();
     const { project_task } = this.props;
 
     let priorityString;

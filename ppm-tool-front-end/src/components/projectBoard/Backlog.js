@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import ProjectTask from "./projectTasks/ProjectTask";
+import componentIsRendered from "../../securityUtils/componentIsRendered";
 
 class Backlog extends Component {
   render() {
+    componentIsRendered();
     const { project_tasks_prop } = this.props;
     const tasks = project_tasks_prop.map(project_task => (
       <ProjectTask key={project_task.id} project_task={project_task} />
