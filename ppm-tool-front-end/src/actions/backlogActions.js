@@ -30,6 +30,10 @@ export const getBacklog = backlog_id => async dispatch => {
   const res = await axios.get(`/backlog/${backlog_id}`);
   try {
     dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    });
+    dispatch({
       type: GET_BACKLOG,
       payload: res.data
     });

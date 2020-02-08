@@ -45,6 +45,11 @@ export const getProject = (id, history) => async dispatch => {
   try {
     const res = await axios.get(`/projects/${id}`);
     dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    });
+
+    dispatch({
       type: GET_PROJECT,
       payload: res.data
     });

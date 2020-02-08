@@ -21,14 +21,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 
-		InvalidLoginResponse res = new InvalidLoginResponse();
-
-		ObjectMapper mapper = new ObjectMapper();
-		String res_json = mapper.writeValueAsString(res);
-
-		response.setContentType("application/json");
-		response.setStatus(401);
-		response.getWriter().print(res_json);
+		response.sendRedirect("/index.html");
 
 	}
 
