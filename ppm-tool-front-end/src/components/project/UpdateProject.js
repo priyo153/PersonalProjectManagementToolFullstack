@@ -3,7 +3,7 @@ import { getProject, updateProject } from "../../actions/projectActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
-import { GET_ERRORS } from "../../actions/types";
+import componentIsRendered from "../../securityUtils/componentIsRendered";
 
 class UpdateProject extends Component {
   //set state
@@ -74,6 +74,7 @@ class UpdateProject extends Component {
 
   render() {
     const { errors } = this.state;
+    componentIsRendered();
     return (
       <div>
         <div className="project">
